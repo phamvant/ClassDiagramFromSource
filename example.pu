@@ -1,0 +1,15 @@
+@startuml
+
+class ClassName {
+  + field1: type
+  + field2: type
+  + method1(): return_type
+  - privateField: type
+  ~ abstractMethod(): return_type (abstract)
+}
+
+ClassA <|-- ClassB : Inheritance
+ClassName o-- ClassC : Association
+ClassA --> ClassD : Message (with label)
+
+@enduml

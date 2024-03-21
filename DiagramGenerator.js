@@ -1,6 +1,6 @@
 const fs = require("fs");
-const { DoTheMagic } = require("./Diagram");
 const path = require("path");
+const { DoTheMagic } = require("./DoTheMagic");
 const { JsonToPlantUmlClassDiagram } = require("./ToPlantUML");
 
 //----------------------EXEC----------------------//
@@ -15,7 +15,7 @@ function getListOfFiles(folderPath) {
   }
 }
 
-function main(folderPath, fileList, blackList) {
+function main(folderPath, fileList, blackList, folderName) {
   fileList.forEach((fileName, index) => {
     if (blackList.includes(fileName)) {
       return;
@@ -24,8 +24,9 @@ function main(folderPath, fileList, blackList) {
     const result = DoTheMagic(path.join(folderPath, fileName));
 
     try {
+      fs.mkdirSync(`./result/${folderName}`, { recursive: true });
       fs.writeFileSync(
-        `./result/${fileName.replace(".cs", ".pu")}`,
+        `./result/${folderName}/${fileName.replace(".cs", ".pu")}`,
         JsonToPlantUmlClassDiagram(result)
       );
       console.log("  File written successfully!");
@@ -35,8 +36,12 @@ function main(folderPath, fileList, blackList) {
   });
 }
 
-const folderPath = "./WPFTutorial/ViewModels";
-const fileList = getListOfFiles(folderPath);
+const folderNames = ["ViewModels"];
+const sourcePath = "WPFTutorial";
 const blackList = ["INavigationService.cs"];
 
-main(folderPath, fileList, blackList);
+folderNames.forEach((folderName) => {
+  const folderPath = path.join(sourcePath, folderName);
+  const fileList = getListOfFiles(folderPath);
+  main(folderPath, fileList, blackList, folderName);
+});
