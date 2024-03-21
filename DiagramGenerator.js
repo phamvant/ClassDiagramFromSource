@@ -1,34 +1,9 @@
 const fs = require("fs");
-const Diagram = require("./Diagram");
+const { DoTheMagic } = require("./Diagram");
 const path = require("path");
+const { JsonToPlantUmlClassDiagram } = require("./ToPlantUML");
 
-function readFileLineByLine(filePath) {
-  let result = "";
-  fs.readFile(filePath, "utf8", (err, data) => {
-    if (err) {
-      console.error("Error reading file:", err);
-      return;
-    }
-    const lines = data.split(/\r?\n/);
-    const filtered = lines.filter(
-      (line) =>
-        (line.includes("public") ||
-          line.includes("private") ||
-          line.includes("internal")) &&
-        !line.includes(" _")
-    );
-
-    const filterOverTab = filtered.map((line) => {
-      return line.replace(/\t/g, " ");
-    });
-
-    if (filterOverTab[0]) {
-      result = Diagram.findLinesWithSameLeadingSpaces(filterOverTab);
-    }
-    console.log(result);
-  });
-  return result;
-}
+//----------------------EXEC----------------------//
 
 function getListOfFiles(folderPath) {
   try {
@@ -40,25 +15,28 @@ function getListOfFiles(folderPath) {
   }
 }
 
-const folderPath =
-  "C:\\Users\\morson\\My\\Remote\\autotune_app\\AutoTune\\AutoTune.Core\\Models";
+function main(folderPath, fileList, blackList) {
+  fileList.forEach((fileName, index) => {
+    if (blackList.includes(fileName)) {
+      return;
+    }
+
+    const result = DoTheMagic(path.join(folderPath, fileName));
+
+    try {
+      fs.writeFileSync(
+        `./result/${fileName.replace(".cs", ".pu")}`,
+        JsonToPlantUmlClassDiagram(result)
+      );
+      console.log("  File written successfully!");
+    } catch (error) {
+      console.error("Error writing file:", error);
+    }
+  });
+}
+
+const folderPath = "./WPFTutorial/ViewModels";
 const fileList = getListOfFiles(folderPath);
+const blackList = ["INavigationService.cs"];
 
-const blackList = ["Constant.cs"];
-
-fileList.forEach((fileName, index) => {
-  if (blackList.includes(fileName)) {
-    return;
-  }
-
-  const result = readFileLineByLine(path.join(folderPath, fileName));
-
-  console.log(result);
-
-  // try {
-  //   fs.writeFileSync(`.\\${fileName}`, result);
-  //   console.log("  File written successfully!");
-  // } catch (error) {
-  //   console.error("Error writing file:", error);
-  // }
-});
+main(folderPath, fileList, blackList);
