@@ -15,7 +15,7 @@ function getListOfFiles(folderPath) {
   }
 }
 
-function main(folderPath, fileList, blackList, folderName) {
+function Exec(folderPath, fileList, blackList, folderName) {
   fileList.forEach((fileName, index) => {
     if (blackList.includes(fileName)) {
       return;
@@ -36,12 +36,16 @@ function main(folderPath, fileList, blackList, folderName) {
   });
 }
 
-const folderNames = ["ViewModels"];
-const sourcePath = "WPFTutorial";
+function main(folderNames, sourcePath, blackList) {
+  folderNames.forEach((folderName) => {
+    const folderPath = path.join(sourcePath, folderName);
+    const fileList = getListOfFiles(folderPath);
+    Exec(folderPath, fileList, blackList, folderName);
+  });
+}
+
+const folderNames = ["ViewModels", "Services"];
+const sourcePath = "sample";
 const blackList = ["INavigationService.cs"];
 
-folderNames.forEach((folderName) => {
-  const folderPath = path.join(sourcePath, folderName);
-  const fileList = getListOfFiles(folderPath);
-  main(folderPath, fileList, blackList, folderName);
-});
+main(folderNames, sourcePath, blackList);
