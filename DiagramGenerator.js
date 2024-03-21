@@ -36,7 +36,7 @@ function Exec(folderPath, fileList, blackList, folderName) {
   });
 }
 
-function main(folderNames, sourcePath, blackList) {
+function DiagramGenerator(folderNames, sourcePath, blackList) {
   folderNames.forEach((folderName) => {
     const folderPath = path.join(sourcePath, folderName);
     const fileList = getListOfFiles(folderPath);
@@ -44,8 +44,9 @@ function main(folderNames, sourcePath, blackList) {
   });
 }
 
-const folderNames = ["ViewModels", "Services"];
-const sourcePath = "sample";
-const blackList = ["INavigationService.cs"];
+// const folderNames = ["ViewModels", "Services"];
+// const sourcePath = "sample";
+// const blackList = ["INavigationService.cs"];
+// DiagramGenerator(folderNames, sourcePath, blackList);
 
-main(folderNames, sourcePath, blackList);
+module.exports = DiagramGenerator;
