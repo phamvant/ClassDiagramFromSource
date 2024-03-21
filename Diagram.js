@@ -38,7 +38,7 @@ function findLinesWithSameLeadingSpaces(lines) {
 
     pushToClass(groupedLines[currentClass], extractNormal(line));
   }
-  console.log(groupedLines);
+  return groupedLines;
 }
 
 function pushToClass(groupedLines, value) {
