@@ -2,7 +2,7 @@ const jsonToPlantUml = require("json-to-plantuml");
 
 async function FormatPU(data) {
   const formatData = await jsonToPlantUml(data);
-  const lines = formatData.split(/\r?\n/);
+  let lines = formatData.split(/\r?\n/);
   lines.forEach((line, index) => {
     if (line.includes("+")) {
       lines[index] = "+" + " " + line.split("+")[1];
@@ -12,6 +12,9 @@ async function FormatPU(data) {
     }
     if (line.includes("..")) {
       lines[index] = "";
+    }
+    if (lines[index].includes("&lt;")) {
+      lines[index] = lines[index].replace(`&lt;`, "<").replace(`&gt;`, ">");
     }
   });
 

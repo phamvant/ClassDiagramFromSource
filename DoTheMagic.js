@@ -134,23 +134,41 @@ function checkIfContain(line, stack) {
 function extractNormal(line) {
   const privacy = line.includes("public") ? "+" : "-";
   const normalCut = line.split(" ");
-  return privacy + " " + normalCut[normalCut.length - 1];
+  return (
+    privacy +
+    " " +
+    normalCut[normalCut.length - 1] +
+    " : " +
+    normalCut[normalCut.length - 2]
+  );
 }
 
 function extractGetter(line) {
   const privacy = line.includes("public") ? "+" : "-";
   const separateBySymbol = line.split("{")[0].split(" ");
-  return privacy + " " + separateBySymbol[separateBySymbol.length - 2];
+  const variableType = separateBySymbol[separateBySymbol.length - 3];
+  return (
+    privacy +
+    " " +
+    separateBySymbol[separateBySymbol.length - 2] +
+    " : " +
+    variableType
+  );
 }
 
 function extractFunction(line) {
   const privacy = line.includes("public") ? "+" : "-";
   const separateBySymbol = line.split("(")[0].split(" ");
-  const result =
-    separateBySymbol[separateBySymbol.length - 1] === ""
-      ? separateBySymbol[separateBySymbol.length - 2]
-      : separateBySymbol[separateBySymbol.length - 1];
-  return privacy + " " + result + "()";
+  let result = "";
+  let variableType = "";
+  if (separateBySymbol[separateBySymbol.length - 1] === "") {
+    result = separateBySymbol[separateBySymbol.length - 2];
+    variableType = separateBySymbol[separateBySymbol.length - 3];
+  } else {
+    result = separateBySymbol[separateBySymbol.length - 1];
+    variableType = separateBySymbol[separateBySymbol.length - 2];
+  }
+  return privacy + " " + result + "() : " + variableType;
 }
 
 function pushToClass(groupedLines, value) {
