@@ -29,7 +29,7 @@ function DoTheMagic(filePath) {
         line.includes("}") ||
         line.includes("{") ||
         line.includes("internal")) &&
-      !line.includes(" _")
+      !(line.includes(" _") && !line.includes("ref"))
   );
 
   const filterOverTab = filtered.map((line) => {
@@ -60,11 +60,14 @@ function DoTheMagic(filePath) {
   groupedLines[className] = [];
   stack.push("{");
   //END
-  recusive(filterOverTab, indexWrapper, className, groupedLines, stack);
+  recusive(filterOverTab, indexWrapper, className, groupedLines, stack, true);
   return groupedLines;
 }
 
-function recusive(lines, index, className, groupedLines, stack) {
+function recusive(lines, index, className, groupedLines, stack, isNewClass) {
+  if (!lines[index.value]) {
+    return;
+  }
   if (lines[index.value].includes(" class ")) {
     const className = classRegex.exec(lines[index.value])[1];
     if (lines[index.value].includes(" { ")) {
@@ -72,32 +75,47 @@ function recusive(lines, index, className, groupedLines, stack) {
       const stack = new Stack();
       groupedLines[className] = [];
       stack.push("{");
-      recusive(lines, index, className, groupedLines);
+      recusive(lines, index, className, groupedLines, stack, true);
     } else {
       const stack = new Stack();
       groupedLines[className] = [];
       stack.push("{");
       index.value += 2;
-      recusive(lines, index, className, groupedLines, stack);
+      recusive(lines, index, className, groupedLines, stack, true);
     }
-  } else {
-    checkIfContain(lines[index.value], stack);
-    if (stack.isEmpty()) {
-      return;
-    }
-    extractClass(lines[index.value], groupedLines, className);
+  }
+  if (!lines[index.value]) {
+    return;
+  }
+  checkIfContain(lines[index.value], stack);
+  if (stack.isEmpty()) {
     index.value += 1;
-    recusive(lines, index, className, groupedLines, stack);
+    return;
+  }
+  extractClass(lines[index.value], groupedLines, className);
+
+  index.value += 1;
+  recusive(lines, index, className, groupedLines, stack, false);
+  if (isNewClass) {
+    recusive(lines, index, className, groupedLines, stack, false);
   }
 }
 
 function extractClass(line, groupedLines, className) {
-  if (line.includes("{") && line.includes("e")) {
-    pushToClass(groupedLines[className], extractGetter(line));
-  } else if (line.includes("(")) {
-    pushToClass(groupedLines[className], extractFunction(line));
-  } else if (line.includes("public") || line.includes("private")) {
-    pushToClass(groupedLines[className], extractNormal(line));
+  if (!(line.includes("public") || line.includes("private"))) {
+    return;
+  } else {
+    if (
+      line.includes("{") &&
+      line.includes("e") &&
+      !line.includes("SetProperty")
+    ) {
+      pushToClass(groupedLines[className], extractGetter(line));
+    } else if (line.includes("(") && !line.includes("SetProperty")) {
+      pushToClass(groupedLines[className], extractFunction(line));
+    } else if (line.includes("public") || line.includes("private")) {
+      pushToClass(groupedLines[className], extractNormal(line));
+    }
   }
 }
 
