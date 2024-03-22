@@ -46,10 +46,9 @@ function DiagramGenerator(folderNames, sourcePath, blackList) {
   }
 }
 
-const folderNames = ["Models"];
-const sourcePath =
-  "C:\\Users\\morson\\My\\Remote\\autotune_app\\AutoTune\\AutoTune.Core";
-const blackList = ["ISetting.cs", "BoolConverter.cs", "Constants.cs"];
-DiagramGenerator(folderNames, sourcePath, blackList);
+// const folderNames = ["Models"];
+// const sourcePath = ""
+// const blackList = ["ISetting.cs", "BoolConverter.cs", "Constants.cs"];
+// DiagramGenerator(folderNames, sourcePath, blackList);
 
 module.exports = DiagramGenerator;
