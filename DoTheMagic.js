@@ -29,7 +29,10 @@ function DoTheMagic(filePath) {
         line.includes("}") ||
         line.includes("{") ||
         line.includes("internal")) &&
-      !(line.includes(" _") && !line.includes("ref"))
+      !(
+        line.includes(" _") &&
+        (line.includes("public") || line.includes("private"))
+      )
   );
 
   const filterOverTab = filtered.map((line) => {

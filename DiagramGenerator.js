@@ -14,7 +14,7 @@ function getListOfFiles(folderPath) {
   }
 }
 
-async function Exec(folderPath, fileList, blackList, folderName) {
+async function Exec(folderPath, fileList, blackList) {
   for (const fileName of fileList) {
     if (blackList.includes(fileName)) {
       continue;
@@ -50,11 +50,10 @@ function DiagramGenerator(folderNames, sourcePath, blackList) {
   }
 }
 
-// const folderNames = ["Models"];
-// const sourcePath =
-//   "C:\\Users\\morson\\My\\Remote\\autotune_app\\AutoTune\\AutoTune.Core";
-// const blackList = ["ISetting.cs", "BoolConverter.cs", "Constants.cs"];
-// const resultPath = ".\\result\\Models";
-DiagramGenerator(folderNames, sourcePath, blackList, resultPath);
+const folderNames = ["Models"];
+const sourcePath =
+  "C:\\Users\\morson\\My\\Remote\\autotune_app\\AutoTune\\AutoTune.Core";
+const blackList = ["ISetting.cs", "BoolConverter.cs", "Constants.cs"];
+DiagramGenerator(folderNames, sourcePath, blackList);
 
 module.exports = DiagramGenerator;
