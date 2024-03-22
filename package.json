@@ -6,6 +6,7 @@
   "author": "phamvant",
   "license": "ISC",
   "dependencies": {
-    "class-diagram-generator-csharp": "^1.0.0"
+    "class-diagram-generator-csharp": "^1.0.0",
+    "json-to-plantuml": "^0.0.9"
   }
 }
