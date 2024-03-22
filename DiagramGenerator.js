@@ -1,8 +1,7 @@
 const fs = require("fs");
 const path = require("path");
 const { DoTheMagic } = require(".\\DoTheMagic");
-const { JsonToPlantUmlClassDiagram } = require(".\\ToPlantUML");
-const { FormatPU } = require("./FormatPU");
+const { FormatPU } = require(".\\FormatPU");
 
 function getListOfFiles(folderPath) {
   try {
@@ -24,16 +23,13 @@ async function Exec(folderPath, fileList, blackList) {
     const resultFolderSplit = folderPath.split("\\");
     const resultFolder = resultFolderSplit[resultFolderSplit.length - 1];
 
-    fixFormat = "";
-    await JsonToPlantUmlClassDiagram(result).then((ret) => {
-      fixFormat = FormatPU(ret);
-    });
+    const toPlantUML = await FormatPU(result);
 
     try {
       fs.mkdirSync(`.\\result\\${resultFolder}`, { recursive: true });
       fs.writeFileSync(
         `.\\result\\${resultFolder}\\${fileName.replace(".cs", ".pu")}`,
-        fixFormat
+        toPlantUML
       );
       console.log("  File written successfully!");
     } catch (error) {

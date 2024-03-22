@@ -1,8 +1,8 @@
-const fs = require("fs");
-const path = require("path");
+const jsonToPlantUml = require("json-to-plantuml");
 
-function FormatPU(data) {
-  const lines = data.split(/\r?\n/);
+async function FormatPU(data) {
+  const formatData = await jsonToPlantUml(data);
+  const lines = formatData.split(/\r?\n/);
   lines.forEach((line, index) => {
     if (line.includes("+")) {
       lines[index] = "+" + " " + line.split("+")[1];
