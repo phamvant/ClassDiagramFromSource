@@ -1,6 +1,6 @@
 {
   "name": "class-diagram-generator-csharp",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "description": "Simple module for making class diagram from C# source code",
   "main": "DiagramGenerator.js",
   "author": "phamvant",
