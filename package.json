@@ -9,6 +9,10 @@
     "class-diagram-generator-csharp": "^1.0.0",
     "json-to-plantuml": "^0.0.9"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/phamvant/ClassDiagramFromSource"
+  },
   "keywords": [
     "csharp",
     "uml",
